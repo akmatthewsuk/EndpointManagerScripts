@@ -124,7 +124,7 @@ do {
             'AutopilotProfile' = $AutopilotEvent.windowsAutopilotDeploymentProfileDisplayName
             'OSVersion' = $AutopilotEvent.osVersion
             'Office' = ""
-            'Netscaler' = ""
+            'Citrix' = ""
         }
         $EnrolledDevices.Add($EnrolledDevice) | Out-Null
     }
@@ -218,7 +218,7 @@ write-host ""
 Write-Host "Exporting the Results" -ForegroundColor Yellow
 #export to csv
 $filename = "EnrollmentandAppStatus" + " " + (get-date -Format "ddMMyyyy HHmm") + ".csv"
-$EnrolledDevices | Select-Object DeviceName,SerialNumber,DeviceType,DeploymentRing,AutopilotProfile,EnrolmentState,UPN,UserDisplayName,OSVersion,Office,Netscaler,DeploymentState,DeviceRegistrationDateTime,enrollmentStartDateTime,deploymentStartDateTime,deploymentEndDateTime | Sort-Object SerialNumber,enrollmentStartDateTime | Export-Csv .\$filename -NoTypeInformation
+$EnrolledDevices | Select-Object DeviceName,SerialNumber,DeviceType,DeploymentRing,AutopilotProfile,EnrolmentState,UPN,UserDisplayName,OSVersion,Office,Citrix,DeploymentState,DeviceRegistrationDateTime,enrollmentStartDateTime,deploymentStartDateTime,deploymentEndDateTime | Sort-Object SerialNumber,enrollmentStartDateTime | Export-Csv .\$filename -NoTypeInformation
 Write-Host "Results exported to $($Filename)"
 
 Stop-Transcript
