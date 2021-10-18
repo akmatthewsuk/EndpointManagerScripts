@@ -503,24 +503,45 @@ function Get-AuthToken {
         If($DCP.'@odata.type' -eq "#microsoft.graph.windows10CustomConfiguration") {
             Write-Host "Preparing Device Configuration Policy for Export"
   
-            
+            $NewOMASettingArray = New-Object System.Collections.ArrayList
             Foreach ($OMASetting in $DCP.omaSettings) {
+                $NewOMASetting = [pscustomobject][ordered] @{ 
+                    "@odata.type" = $OMASetting.'@odata.type'
+                    "displayName" = $OMASetting.displayName
+                    "description" = $OMASetting.description
+                    "omaUri" = $OMASetting.omaUri
+                    "value" = ""
+                }
                 If($OMASetting.isEncrypted -eq $false) {
-                    $OMASetting = $OMASetting | Select-Object '@odata.type',displayName,description,omaUri,value
+                    $NewOMASetting.Value = $OMASetting.value
                 } else {
                     #Get the secret value
                     $PlainTextValue = Get-SecretValue -Guid $DCP.ID -SecretID $OMASetting.secretReferenceValueId
-                    $OMASetting.Value = $PlainTextValue
-                    $OMASetting = $OMASetting | Select-Object '@odata.type',displayName,description,omaUri,value
+                    $NewOMASetting.Value = $PlainTextValue
                 }
+                $NewOMASettingArray.add($NewOMASetting) | out-Null
             }
+            #Reconstruct the DCP
+            $NewDCP = [pscustomobject][ordered] @{
+                "@odata.type" = $DCP.'@odata.type'
+                "description" = $DCP.Description
+                "displayName" = $DCP.DisplayName
+                "omaSettings" = $NewOMASettingArray
+            }
+
+
+            Write-Host "Exporting Device Configuration Policy"        
+            Export-JSONData -JSON $NewDCP -ExportPath "$ExportPath"
+            Write-Host
+        } else {
+            Write-Host "Exporting Device Configuration Policy"        
+            Export-JSONData -JSON $DCP -ExportPath "$ExportPath"
+            Write-Host
         }
         
 
 
-        Write-Host "Exporting Device Configuration Policy"        
-        Export-JSONData -JSON $DCP -ExportPath "$ExportPath"
-        Write-Host
+        
         
     }
     
