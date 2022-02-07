@@ -1,0 +1,206 @@
+{
+  "version": "Notebook/1.0",
+  "items": [
+    {
+      "type": 1,
+      "content": {
+        "json": "# Update Compliance Snapshot\n---\n\nThis workbook provides a quick overview of the the status of Windows laptop and desktop updates.   \n**Important** - The Update Metadata table must be periodically refreshed for the snapshot to be accurate"
+      },
+      "name": "Report Title"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Windows Update Compliance Snapshot\r\n---"
+      },
+      "name": "Update Compliance Title"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let LatestCumulativeUpdates = WU_CU_Metadata_CL\n| where TimeGenerated > ago(30d)\n| summarize arg_max(TimeGenerated, *) by Build_s\n| project OSBuild=Build_s, NValue=NValue_s, FeatureUpdate=FeatureUpdate_s, Description=Description_s;\nlet CumulativeUpdates = materialize(LatestCumulativeUpdates);\nWaaSUpdateStatus\n| union WaaSInsiderStatus\n| where TimeGenerated > ago(7d)\n| join kind = inner CumulativeUpdates on OSBuild\n| summarize arg_max(TimeGenerated, *) by ComputerID\n| summarize dcount(ComputerID) by OSBuild, NValue\n| summarize sum(dcount_ComputerID) by NValue\n| project N=NValue,Devices=sum_dcount_ComputerID\n| order by N asc\n| render piechart",
+        "size": 3,
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "chartSettings": {
+          "seriesLabelSettings": [
+            {
+              "seriesName": "Older",
+              "color": "red"
+            },
+            {
+              "seriesName": "N+1",
+              "label": "N Plus One",
+              "color": "green"
+            },
+            {
+              "seriesName": "N",
+              "label": "N (Current)",
+              "color": "greenDark"
+            },
+            {
+              "seriesName": "N+2",
+              "label": "N Plus Two",
+              "color": "orange"
+            }
+          ]
+        }
+      },
+      "customWidth": "50",
+      "name": "Windows Security Update Compliance Chart"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "let LatestCumulativeUpdates = WU_CU_Metadata_CL\r\n| where TimeGenerated > ago(30d)\r\n| summarize arg_max(TimeGenerated, *) by Build_s\r\n| project OSBuild=Build_s, NValue=NValue_s, FeatureUpdate=FeatureUpdate_s, Description=Description_s;\r\nlet CumulativeUpdates = materialize(LatestCumulativeUpdates);\r\nWaaSUpdateStatus\r\n| union WaaSInsiderStatus\r\n| where TimeGenerated > ago(7d)\r\n| join kind = inner CumulativeUpdates on OSBuild\r\n| summarize arg_max(TimeGenerated, *) by ComputerID\r\n| summarize dcount(ComputerID) by OSBuild, NValue\r\n| summarize sum(dcount_ComputerID) by NValue\r\n| project N=NValue,Devices=sum_dcount_ComputerID\r\n| render table",
+        "size": 1,
+        "title": "Windows Security Update Compliance",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Devices",
+              "formatter": 3,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "rowLimit": 4,
+          "labelSettings": [
+            {
+              "columnId": "Devices",
+              "label": "Number of devices"
+            }
+          ]
+        }
+      },
+      "customWidth": "50",
+      "name": "Windows Security Update Compliance Table"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Security Update Distribution\r\n---"
+      },
+      "name": "Update Version Title"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "WaaSUpdateStatus\r\n| union WaaSInsiderStatus\r\n| where TimeGenerated > ago(7d)\r\n| summarize arg_max(TimeGenerated, *) by ComputerID \r\n| summarize dcount(ComputerID) by OSBuild\r\n| render piechart",
+        "size": 3,
+        "title": "Windows Build Version Distribution",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "chartSettings": {
+          "yAxis": [
+            "dcount_ComputerID"
+          ],
+          "group": "OSBuild",
+          "createOtherGroup": 8,
+          "showLegend": true,
+          "ySettings": {
+            "numberFormatSettings": {
+              "unit": 0,
+              "options": {
+                "style": "decimal",
+                "useGrouping": true
+              }
+            }
+          }
+        }
+      },
+      "customWidth": "50",
+      "name": "Windows Build Version Distribution Chart"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "WaaSUpdateStatus\r\n| union WaaSInsiderStatus\r\n| where TimeGenerated > ago(7d)\r\n| summarize arg_max(TimeGenerated, *) by ComputerID\r\n| summarize dcount(ComputerID) by OSBuild\r\n| sort by OSBuild desc\r\n| project Version=OSBuild, Devices=dcount_ComputerID\r\n| render table",
+        "size": 0,
+        "title": "Windows Build Version Distribution",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Devices",
+              "formatter": 3,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "Devices",
+              "label": "Number of devices"
+            }
+          ]
+        }
+      },
+      "customWidth": "50",
+      "name": "Windows Build Version Distribution Table"
+    },
+    {
+      "type": 1,
+      "content": {
+        "json": "### Feature Update Distribution\r\n---"
+      },
+      "name": "Feature Update Title"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "WaaSUpdateStatus\r\n| union WaaSInsiderStatus\r\n| where TimeGenerated > ago(7d)\r\n| summarize arg_max(TimeGenerated, *) by ComputerID \r\n| summarize dcount(ComputerID) by OSVersion\r\n| render piechart",
+        "size": 3,
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces"
+      },
+      "customWidth": "50",
+      "name": "Feature Update Distribution Chart"
+    },
+    {
+      "type": 3,
+      "content": {
+        "version": "KqlItem/1.0",
+        "query": "WaaSUpdateStatus\r\n| union WaaSInsiderStatus\r\n| where TimeGenerated > ago(7d)\r\n| summarize arg_max(TimeGenerated, *) by ComputerID \r\n| summarize dcount(ComputerID) by OSVersion,OSServicingBranch\r\n| sort by OSVersion desc\r\n| project Branch=OSServicingBranch,FeatureUpdate=OSVersion, Devices=dcount_ComputerID\r\n| render table",
+        "size": 1,
+        "title": "Feature Update Distribution",
+        "queryType": 0,
+        "resourceType": "microsoft.operationalinsights/workspaces",
+        "gridSettings": {
+          "formatters": [
+            {
+              "columnMatch": "Devices",
+              "formatter": 3,
+              "formatOptions": {
+                "palette": "blue"
+              }
+            }
+          ],
+          "labelSettings": [
+            {
+              "columnId": "FeatureUpdate",
+              "label": "Feature Update"
+            },
+            {
+              "columnId": "Devices",
+              "label": "Number of devices"
+            }
+          ]
+        }
+      },
+      "customWidth": "50",
+      "name": "Feature Update Distribution Table"
+    }
+  ],
+  "$schema": "https://github.com/Microsoft/Application-Insights-Workbooks/blob/master/schema/workbook.json"
+}

@@ -1,0 +1,95 @@
+{
+    "CU":[
+        {
+            "Version":"10.0.19043.1469",
+            "Build":"19043.1469",
+            "FeatureUpdate":"21H2",
+            "Description":"21H2 January 2022 Cumulative Update",
+            "NValue":"N"
+        },
+        {
+            "Version":"10.0.19044.1466",
+            "Build":"19044.1466",
+            "FeatureUpdate":"21H2",
+            "Description":"21H2 January 2022 Cumulative Update",
+            "NValue":"N"
+        },
+        {
+            "Version":"10.0.19044.1415",
+            "Build":"19044.1415",
+            "FeatureUpdate":"21H2",
+            "Description":"21H2 December 2021 Cumulative Update",
+            "NValue":"N+1"
+        },
+        {
+            "Version":"10.0.19043.11503",
+            "Build":"19043.1503",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 January 2022 Cumulative Update (Preview)",
+            "NValue":"N"
+        },
+        {
+            "Version":"10.0.19043.1466",
+            "Build":"19043.1466",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 January 2022 Cumulative Update",
+            "NValue":"N"
+        },
+        {
+            "Version":"10.0.19043.1415",
+            "Build":"19043.1415",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 December 2021 Cumulative Update",
+            "NValue":"N+1"
+        },
+        {
+            "Version":"10.0.19043.1387",
+            "Build":"19043.1387",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 November 2021 Cumulative Update (Preview)",
+            "NValue":"N+2"
+        },
+        {
+            "Version":"10.0.19043.1348",
+            "Build":"19043.1348",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 November 2021 Cumulative Update",
+            "NValue":"N+2"
+        },
+        {
+            "Version":"10.0.19043.1320",
+            "Build":"19043.1320",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 October 2021 Cumulative Update (Preview)",
+            "NValue":"Older"
+        },
+        {
+            "Version":"10.0.19043.1288",
+            "Build":"19043.1288",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 October 2021 Cumulative Update",
+            "NValue":"Older"
+        },
+        {
+            "Version":"10.0.19043.1266",
+            "Build":"19043.1266",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 September 2021 Cumulative Update (Preview)",
+            "NValue":"Older"
+        },
+        {
+            "Version":"10.0.19043.1237",
+            "Build":"19043.1237",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 September 2021 Cumulative Update",
+            "NValue":"Older"
+        },
+        {
+            "Version":"10.0.19043.1165",
+            "Build":"19043.1165",
+            "FeatureUpdate":"21H1",
+            "Description":"21H1 august 2021 Cumulative Update",
+            "NValue":"Older"
+        }
+    ]
+}
