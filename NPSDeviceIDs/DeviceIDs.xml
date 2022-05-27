@@ -1,0 +1,16 @@
+<Config>
+    <FunctionAppURL>Insert Function App URL</FunctionAppURL>
+    <Groups>
+        <Group>
+            <ID>Group 1</ID>
+            <Description>AAD Group 1</Description>
+            <AAD>AAD-Group-1</AAD>
+            <AD>Domain Computers</AD>
+            <AD>AADJ-NPS</AD>
+        </Group>
+    </Groups>
+    <OU>OU=AADJ,OU=Org,DC=org,DC=com</OU>
+    <CertificateAuthorities>
+        <CA>X509:&lt;I&gt;DC=com,DC=org,CN=CA01&lt;S&gt;CN=</CA>
+    </CertificateAuthorities>
+</Config>
