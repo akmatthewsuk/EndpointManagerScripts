@@ -67,6 +67,8 @@ $Log_GUID = New-GUID
 
 #Log to the console - if true will output as write-host
 $Log_Console = $True
+#Log to Log Analytics - if true will upload to Log Analytics at the end of the script
+$Log_LogAnalytics = $True
 
 $GraphBaseURI = "https://graph.microsoft.com"
 #$GraphApiVersion = "2019-08-01"
@@ -221,8 +223,7 @@ If($ExecutionError -eq $false) {
         $LogAnalyticsWorkspaceID = $Env:LOG_WORKSPACEID
     } else {
         New-LogEntry -LogLevel $LogLevel_Error -LogText "The Log Analytics WorkSpace ID is not set on the app settings"
-        $ExecutionError = $True
-        $ExecutionErrorText = "The Log Analytics WorkSpace ID is not set on the app settings"
+        $Log_LogAnalytics = $False
         
     }
 }
@@ -234,8 +235,7 @@ If($ExecutionError -eq $false) {
         $LogAnalyticsSharedKey = $Env:LOG_SHAREDKEY
     } else {
         New-LogEntry -LogLevel $LogLevel_Error -LogText "The Log Analytics Shared Key is not set on the app settings"
-        $ExecutionError = $True
-        $ExecutionErrorText = "The Log Analytics Shared Key is not set on the app settings"
+        $Log_LogAnalytics = $False
         
     }
 
@@ -414,16 +414,15 @@ If($ExecutionError -eq $false) {
 ################################################
 # Section 4 - Exit
 ################################################
-If($ExecutionError -eq $false) {
-    New-LogEntry -LogLevel $LogLevel_Information -LogText "Section 4 Step 1: Uploading Data to Log Analytics"
-}
 # Section 4 Step 1: Upload the logs to Azure Log Analytics
+If($Log_LogAnalytics -eq $True) {
+    New-LogEntry -LogLevel $LogLevel_Information -LogText "Section 4 Step 1: Uploading Data to Log Analytics"
 
-#Convert the log cache array to JSON
-$LogAnalyticsJSON = $LogCacheArray | Select-Object source, RunID, LogDate, EntryID, LogLevel, LogText | ConvertTo-Json
-#Upload the log data
-New-LogAnalyticsData -WorkspaceID $LogAnalyticsWorkspaceID -SharedKey $LogAnalyticsSharedKey -LogBody ([System.Text.Encoding]::UTF8.GetBytes($LogAnalyticsJSON)) -LogType $Log_Type
-
+    #Convert the log cache array to JSON
+    $LogAnalyticsJSON = $LogCacheArray | Select-Object source, RunID, LogDate, EntryID, LogLevel, LogText | ConvertTo-Json
+    #Upload the log data
+    New-LogAnalyticsData -WorkspaceID $LogAnalyticsWorkspaceID -SharedKey $LogAnalyticsSharedKey -LogBody ([System.Text.Encoding]::UTF8.GetBytes($LogAnalyticsJSON)) -LogType $Log_Type
+}
 # Section 4 Step 2: Send the response
 
 #Create the response body
